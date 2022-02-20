@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 
 
-const Ins_style = TextStyle(color: Colors.black,fontWeight: FontWeight.w900,fontFamily: 'Ubuntu',fontSize: 35);
+const Ins_style = TextStyle(color: Colors.black,fontWeight: FontWeight.w900,
+// fontFamily: 'Ubuntu',
+fontSize: 35);
 
 const rule_style = TextStyle(
     color: Colors.black,
     fontSize: 20,
     fontWeight: FontWeight.w400,
-    fontFamily: 'Ubuntu',
+    // fontFamily: 'Ubuntu',
 );
 
 const comp_player_style= TextStyle(
     color: Colors.black,
-    fontFamily: 'Ubuntu',
+    // fontFamily: 'Ubuntu',
     fontWeight: FontWeight.w700,
     fontSize: 30,
+);
+
+const coins_left_style= TextStyle(
+    color: Colors.black,
+    fontSize: 24,
+    fontWeight: FontWeight.w500,
 );

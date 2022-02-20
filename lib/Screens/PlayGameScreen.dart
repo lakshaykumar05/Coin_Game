@@ -1,35 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:coin_game/Constants/constants.dart';
+import 'dart:math';
+
 
 
 class PlayGameScreen extends StatefulWidget {
   // const PlayGameScreen({Key? key}) : super(key: key);
   @override
-  PlayGameScreen({this.playerName});
-  final playerName;
+  PlayGameScreen();
+  // var totalcoins;
   //
   // print(playerName);
   _PlayGameScreenState createState() => _PlayGameScreenState();
 }
 
 class _PlayGameScreenState extends State<PlayGameScreen> {
-
-  // String playername=widget.playerName;
   @override
 
-  String playername;
+  String playername="You";
   Size fixedSize;
+  // List<bool>dp=[];
+  var dp = new List(520);
+  // String totalCoinsStr;
+  int totalCoins;
+
 
   void initState(){
     super.initState();
-    playername=widget.playerName;
+    totalCoins=20;
+    // totalCoins=int.parse(widget.totalcoins);
   }
 
-  void calculate(){
-    List<bool>dp=[];
+  bool playerChance=true;
+  bool playerWin=false;
 
+  void calculate(){
     dp[0]=false;
     dp[1]=dp[2]=dp[3]=true;
+
+    // true means computer wants that number of coins to be left for his win.
 
     for(int i=4;i<=503;i++){
         if(dp[i-1]==false || dp[i-2]==false || dp[i-3]==false){
@@ -41,10 +50,62 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
     }
   }
 
-  // print(playerName);
+  int computerplayerChance(){
+      int coinsTaken;
+
+      if(totalCoins-1>=0 && dp[totalCoins-1]==false){
+            totalCoins--;
+            coinsTaken=1;
+      }
+      else if(totalCoins-2>=0 && dp[totalCoins-2]==false){
+            totalCoins-=2;
+            coinsTaken=2;
+      }
+      else if(totalCoins-3>=0 && dp[totalCoins-3]==false){
+            totalCoins-=3;
+            coinsTaken=3;
+      }
+
+      return coinsTaken;
+  }
+  
+  void playerplayerChance(int numberOfCoins){
+      totalCoins-=numberOfCoins;
+      playerChance=false;
+      setState(() {});
+
+      print("Remaining coins after player chance");
+      print(totalCoins);
+
+      if(totalCoins<=0){
+          playerWin=true;
+          return;
+      }
+
+      Future.delayed(Duration(seconds: 2),(){
+          totalCoins-=computerplayerChance();
+          print("Remaining coins after computer chance");
+          print(totalCoins);
+
+          if(totalCoins<=0){
+              playerWin=false;
+              return;
+          }
+
+          playerChance=true;
+          setState(() {});
+      });
+
+      print(totalCoins);
+  }
+
+
 
   Widget build(BuildContext context) {
-    print(playername);
+    // print(playername);
+
+    calculate();
+
     Size size = MediaQuery.of(context).size;
     // print(size.height);
 
@@ -57,72 +118,92 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
       body: Column(
         children: [
           Container(
-            width: (size.width),
-            height:size.height/2.3,
-            color: Colors.green,
-            child: Center(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(23.0),
-                    child: Text('Computer',style: comp_player_style,),
-                  ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        child: const Text(
-                          '1',
-                          style: TextStyle(fontSize: 24),
-                        ),
-                        onPressed: () {
-
-                        },
-                        style: ElevatedButton.styleFrom(
-                            // fixedSize: const Size(200, 200),
-                            shape: const CircleBorder(),
-                        ),
-                      ),
-                      ElevatedButton(
-                        child: const Text(
-                          '2',
-                          style: TextStyle(fontSize: 24),
-                        ),
-                        onPressed: () {
-
-                        },
-                        style: ElevatedButton.styleFrom(
-                          // fixedSize: const Size(200, 200),
-                          shape: const CircleBorder(),
-                        ),
-                      ),
-                      ElevatedButton(
-                        child: const Text(
-                          '3',
-                          style: TextStyle(fontSize: 24),
-                        ),
-                        onPressed: () {
-
-                        },
-                        style: ElevatedButton.styleFrom(
-                          // fixedSize: const Size(200, 200),
-                          shape: const CircleBorder(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+            color: Colors.red[300],
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+        
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Coins Left: $totalCoins',style: coins_left_style,),
+                  ],
               ),
             ),
           ),
-          Flexible(
+          // Container(
+          //   width: (size.width),
+          //   // height:size.height/2,
+          //   color: Colors.green,
+          //   child: Center(
+          //     child: Column(
+          //       children: [
+          //         Padding(
+          //           padding: const EdgeInsets.all(23.0),
+          //           child: Text('Computer',style: comp_player_style,),
+          //         ),
+          //         SizedBox(
+          //           height: 40,
+          //         ),
+          //         Row(
+          //           mainAxisAlignment: MainAxisAlignment.center,
+          //           children: [
+          //             ElevatedButton(
+          //               child: const Text(
+          //                 '1',
+          //                 style: TextStyle(fontSize: 24),
+          //               ),
+          //               onPressed: () {
+
+          //               },
+          //               style: ElevatedButton.styleFrom(
+          //                   // fixedSize: const Size(200, 200),
+          //                   shape: const CircleBorder(),
+          //               ),
+          //             ),
+          //             ElevatedButton(
+          //               child: const Text(
+          //                 '2',
+          //                 style: TextStyle(fontSize: 24),
+          //               ),
+          //               onPressed: () {
+
+          //               },
+          //               style: ElevatedButton.styleFrom(
+          //                 // fixedSize: const Size(200, 200),
+          //                 shape: const CircleBorder(),
+          //               ),
+          //             ),
+          //             ElevatedButton(
+          //               child: const Text(
+          //                 '3',
+          //                 style: TextStyle(fontSize: 24),
+          //               ),
+          //               onPressed: () {
+
+          //               },
+          //               style: ElevatedButton.styleFrom(
+          //                 // fixedSize: const Size(200, 200),
+          //                 shape: const CircleBorder(),
+          //               ),
+                        
+          //             ),
+
+                      
+          //             // computerplayerChance(50),
+          //           ],
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+
+
+          Expanded(
             child: Container(
               color: Colors.yellow,
               width: size.width,
-              height: size.height,
+              // height: size.height,
               // height: size.height-(size.height/2.3),
               child: Center(
                 child: Column(
@@ -137,7 +218,10 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                             style: TextStyle(fontSize: 24),
                           ),
                           onPressed: () {
-
+                              if(playerChance==true){
+                                  playerplayerChance(1);
+                                  Text('Player removes one coin');
+                              }
                           },
                           style: ElevatedButton.styleFrom(
                             // fixedSize: const Size(200, 200),
@@ -150,7 +234,10 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                             style: TextStyle(fontSize: 24),
                           ),
                           onPressed: () {
-
+                            if(playerChance==true){
+                                playerplayerChance(2);
+                                Text('Player removes two coins');
+                            }   
                           },
                           style: ElevatedButton.styleFrom(
                             // fixedSize: const Size(200, 200),
@@ -163,7 +250,10 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                             style: TextStyle(fontSize: 24),
                           ),
                           onPressed: () {
-
+                              if(playerChance==true){
+                                playerplayerChance(3);
+                                Text('Player removes three coins');
+                              }
                           },
                           style: ElevatedButton.styleFrom(
                             // fixedSize: const Size(200, 200),

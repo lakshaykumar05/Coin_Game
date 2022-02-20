@@ -15,7 +15,8 @@ class _StartGameScreenState extends State<StartGameScreen> {
 
   String start='Start Game';
   bool visi=false;
-  String playerName;
+  int totalCoins;
+  var totalCoinsStr;
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +35,12 @@ class _StartGameScreenState extends State<StartGameScreen> {
                 padding: const EdgeInsets.only(top:48,right: 8,left: 4),
                 child: Center(
                   child: Text(
-                    'Enter your Name',
+                    'Enter Number of Coins',
                     style: TextStyle(
                       fontSize: 35,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
-                      fontFamily: 'Ubuntu',
+                      // fontFamily: 'Ubuntu',
                       //  fontFamily: 'Pacifico',
                     ),
                   ),
@@ -51,16 +52,17 @@ class _StartGameScreenState extends State<StartGameScreen> {
             // color: Colors.amberAccent,
             padding: EdgeInsets.only(top:25,left:45,right: 45),
             child: TextField(
+              keyboardType: TextInputType.number,
               style: TextStyle(
                 color: Colors.black,
               ),
               decoration: InputDecoration(
                 fillColor: Colors.white,
                 filled: true,
-                hintText: 'Username',
+                hintText: 'Coins',
                 hintStyle: TextStyle(
                   color: Colors.grey,
-                  fontFamily: 'Ubuntu',
+                  // fontFamily: 'Ubuntu',
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -80,14 +82,12 @@ class _StartGameScreenState extends State<StartGameScreen> {
                   visi = true;
                 });
 
-                playerName=textController.text;
+                totalCoins=int.parse(textController.text);
+                totalCoinsStr=textController.text;
 
-                // user_det = await CodeForces().getUserData(userName);
-                // user_all_det = await CodeForces().getAllInfo(userName);
-                // print(user_all_det);
-                // print(playerName);
+                // print(totalCoins);
 
-                if (playerName == null || playerName.isEmpty) {
+                if (totalCoins == null || totalCoinsStr.isEmpty) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) => popUpDialog(context),
@@ -96,7 +96,7 @@ class _StartGameScreenState extends State<StartGameScreen> {
                   // fun(user_all_det);
                    Navigator.push(context,
                       MaterialPageRoute(builder: (context) {
-                        return PlayGameScreen(playerName: playerName,);
+                        return PlayGameScreen();
                       }));
                   }
                 setState(() {
@@ -121,7 +121,7 @@ class _StartGameScreenState extends State<StartGameScreen> {
                           Text(
                             start,
                             style: TextStyle(
-                              fontFamily: "Ubuntu",
+                              // fontFamily: "Ubuntu",
                               fontSize: 18,
                             ),
                           ),
@@ -178,7 +178,7 @@ Widget popUpDialog(BuildContext context) {
             'OK',
             style: TextStyle(
               fontSize: 21,
-              fontFamily: 'Ubuntu',
+              // fontFamily: 'Ubuntu',
             ),
           ),
           //FaIcon(FontAwesomeIcons.times,size: 50,)
