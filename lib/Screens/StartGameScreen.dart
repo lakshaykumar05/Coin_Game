@@ -87,7 +87,9 @@ class _StartGameScreenState extends State<StartGameScreen> {
 
                 // print(totalCoins);
 
-                if (totalCoins == null || totalCoinsStr.isEmpty) {
+                // print(totalCoins.runtimeType);
+
+                if (totalCoins == 0 || totalCoinsStr.isEmpty || totalCoinsStr==null) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) => popUpDialog(context),
@@ -96,7 +98,7 @@ class _StartGameScreenState extends State<StartGameScreen> {
                   // fun(user_all_det);
                    Navigator.push(context,
                       MaterialPageRoute(builder: (context) {
-                        return PlayGameScreen();
+                        return PlayGameScreen(totalCoins);
                       }));
                   }
                 setState(() {

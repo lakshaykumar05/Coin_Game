@@ -15,7 +15,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: PlayGameScreen(),
+      home: InstructionsScreen(),
+      debugShowCheckedModeBanner: false,
       // PlayGameScreen(playerName: 'nj',),
     );
   }

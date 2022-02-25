@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:coin_game/Constants/constants.dart';
 import 'dart:math';
@@ -7,8 +8,8 @@ import 'dart:math';
 class PlayGameScreen extends StatefulWidget {
   // const PlayGameScreen({Key? key}) : super(key: key);
   @override
-  PlayGameScreen();
-  // var totalcoins;
+  PlayGameScreen(this.totalcoins);
+  int totalcoins;
   //
   // print(playerName);
   _PlayGameScreenState createState() => _PlayGameScreenState();
@@ -17,18 +18,22 @@ class PlayGameScreen extends StatefulWidget {
 class _PlayGameScreenState extends State<PlayGameScreen> {
   @override
 
-  String playername="You";
+  String playername="Player";
   Size fixedSize;
   // List<bool>dp=[];
   var dp = new List(520);
   // String totalCoinsStr;
   int totalCoins;
 
+  String winnerIsPlayerText="Hurray!!! You won the game.";
+  String winnerIsComputerText="Oops!!! Better Luck next time.";
+
 
   void initState(){
     super.initState();
-    totalCoins=20;
-    // totalCoins=int.parse(widget.totalcoins);
+    // totalCoins=20;
+    totalCoins=widget.totalcoins;
+    // print(widget.totalcoins.runtimeType);
   }
 
   bool playerChance=true;
@@ -70,7 +75,12 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
   }
   
   void playerplayerChance(int numberOfCoins){
-      totalCoins-=numberOfCoins;
+
+      if(totalCoins<=0){
+          return;
+      }
+
+      totalCoins=max(0,totalCoins-numberOfCoins);
       playerChance=false;
       setState(() {});
 
@@ -79,21 +89,23 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
 
       if(totalCoins<=0){
           playerWin=true;
-          return;
+          // return;
       }
 
       Future.delayed(Duration(seconds: 2),(){
-          totalCoins-=computerplayerChance();
+
+          totalCoins=max(0,totalCoins-computerplayerChance());
+
           print("Remaining coins after computer chance");
           print(totalCoins);
 
-          if(totalCoins<=0){
-              playerWin=false;
-              return;
-          }
-
           playerChance=true;
           setState(() {});
+
+          if(totalCoins<=0){
+              showDialog(context: context, builder: (BuildContext context) => popUpDialog(context,playerWin,winnerIsComputerText,winnerIsPlayerText));
+              return;
+          }
       });
 
       print(totalCoins);
@@ -220,7 +232,14 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
                           onPressed: () {
                               if(playerChance==true){
                                   playerplayerChance(1);
-                                  Text('Player removes one coin');
+                                 
+                                  // Timer(const Duration(seconds: 2), (){
+                                  //   setState((){
+                                  //     Center(child: Text('Player removes one coin',style: rule_style,));
+                                  //     });
+                                  // });
+
+                                  // Text('Player removes one coin');
                               }
                           },
                           style: ElevatedButton.styleFrom(
@@ -272,3 +291,43 @@ class _PlayGameScreenState extends State<PlayGameScreen> {
     );
   }
 }
+
+
+
+Widget popUpDialog(BuildContext context,bool playerwin,String winnerIsComputer,String winnerIsPlayer) {
+  return new AlertDialog(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22.0)),
+    title: Center(
+      child: Text(
+        playerwin? winnerIsPlayer:winnerIsComputer,
+        style: TextStyle(
+          fontSize: 22,
+          // fontFamily: 'Ubuntu',
+        ),
+      ),
+      ),
+    actions: <Widget>[
+      new FlatButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        textColor: Theme.of(context).primaryColor,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 108.0),
+          child: Center(
+            child: Text(
+              'OK',
+              style: TextStyle(
+                fontSize: 21,
+                // fontFamily: 'Ubuntu',
+              ),
+            ),
+          ),
+          //FaIcon(FontAwesomeIcons.times,size: 50,)
+        ),
+      ),
+    ],
+  );
+}
+
+
